@@ -21,7 +21,7 @@ async def main():
     out.mkdir(exist_ok=False)
     report = {"scenario": "トップページから2024年6月議会の岩井康議員の質問要項へ到達し、大綱1を確認", "backends": {}}
     params = StdioServerParameters(command=sys.executable, args=["server.py"], cwd=str(ROOT),
-                                   env={**os.environ, "ABIKO_DATA": str(run / "data")})
+                                   env={**os.environ, "ABIKO_DATA": str(run / "data"), "ABIKO_HISTORY": str(run / "history.sqlite3")})
     with (out / "toolcalls.jsonl").open("w") as log:
         async with stdio_client(params) as (read, write), ClientSession(read, write) as session:
             await session.initialize()
