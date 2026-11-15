@@ -1,5 +1,5 @@
 [project]
-name = "abiko-crawler-bench"
+name = "abiko-public-sources-mcp"
 version = "0.1.0"
 description = "Crawl4AI-backed MCP for Abiko public documents"
 requires-python = ">=3.12"

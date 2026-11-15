@@ -9,7 +9,7 @@ resolution-markers = [
 ]
 
 [[package]]
-name = "abiko-crawler-bench"
+name = "abiko-public-sources-mcp"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

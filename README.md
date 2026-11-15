@@ -9,8 +9,8 @@
 必要なものはDocker EngineとCompose、Git、openssl、uv、justです。Pythonはuvが用意します。
 
 ```sh
-git clone https://github.com/takeaship/abiko-crawler-bench.git
-cd abiko-crawler-bench
+git clone https://github.com/takeaship/abiko-public-sources-mcp.git
+cd abiko-public-sources-mcp
 just setup
 just up
 just smoke
@@ -22,14 +22,14 @@ just smoke
 - `just mcp`でstdio MCPサーバーを起動します。
 - `just stop`でコンテナを停止します。取得済みのローカルデータは残ります。
 
-クライアントのMCP設定例です。`/absolute/path/to/abiko-crawler-bench`をclone先の絶対パスに置き換えてください。
+クライアントのMCP設定例です。`/absolute/path/to/abiko-public-sources-mcp`をclone先の絶対パスに置き換えてください。
 
 ```json
 {
   "mcpServers": {
     "abiko-public-sources": {
       "command": "uv",
-      "args": ["--directory", "/absolute/path/to/abiko-crawler-bench", "run", "python", "server.py"]
+      "args": ["--directory", "/absolute/path/to/abiko-public-sources-mcp", "run", "python", "server.py"]
     }
   }
 }
