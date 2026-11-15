@@ -1,7 +1,9 @@
 """Local stdio MCP for public Abiko documents. All content is untrusted source data."""
 import hashlib
 import json
+import os
 import re
+import signal
 import time
 from datetime import datetime
 from pathlib import Path
@@ -43,6 +45,12 @@ def allowed_url(url: str) -> str:
     raise ValueError("対象は我孫子市公式サイトと同市の外部会議録サイトです")
 
 
+def error_code(exc: Exception, origin: str) -> str:
+    if isinstance(exc, httpx.HTTPStatusError):
+        return f"{origin}_HTTP_{exc.response.status_code}"
+    return f"{origin}_{type(exc).__name__}"
+
+
 def summarize(r: dict) -> dict:
     return {**store.citation(r), "error": r["error"], "native_seconds": r["native_seconds"],
             "total_seconds": r["total_seconds"], "native_characters": len(r["markdown"]),
@@ -53,12 +61,12 @@ def summarize(r: dict) -> dict:
 
 @mcp.tool()
 def fetch_document(url: str) -> dict:
-    """指定URLをローカルCrawl4AIで取得し、失敗も含めて版を保存。外部AI/API fallbackなし。"""
+    """指定URLを取得してプロセス内で一時保持。期限切れ後は再取得が必要。出典情報は残す。"""
     url = allowed_url(url)
     started = time.monotonic()
     fetched = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat()
     pdf = urlsplit(url).path.lower().endswith(".pdf")
-    params = {"cache_mode": "bypass", "page_timeout": 60000}
+    params = {"cache_mode": "bypass", "page_timeout": 60000, "verbose": False, "log_console": False}
     if pdf:
         params["scraping_strategy"] = {"type": "PDFContentScrapingStrategy", "params": {}}
     elif urlsplit(url).hostname == "www.city.abiko.chiba.jp" and urlsplit(url).path not in {"/", "/index.html"}:
@@ -78,7 +86,8 @@ def fetch_document(url: str) -> dict:
         html = item.get("html") or ""
         title = (item.get("metadata") or {}).get("title") or ""
         final_url = item.get("redirected_url") or url
-        error = item.get("error_message") or None
+        error = (f"source_HTTP_{item['status_code']}" if (item.get("status_code") or 0) >= 400
+                 else "backend_crawl_failed") if not success else None
         for group in (item.get("links") or {}).values():
             for a in group:
                 if isinstance(a, dict) and (a.get("href") or a.get("url")):
@@ -88,10 +97,10 @@ def fetch_document(url: str) -> dict:
         pages = [{"page": int(p["data-page"]), "text": p.get_text("\n", strip=True)}
                  for p in s.select(".pdf-page[data-page]")]
     except (httpx.HTTPError, ValueError, KeyError, IndexError) as exc:
-        error = f"{type(exc).__name__}: {exc}"
+        error = error_code(exc, "backend")
     native_seconds = time.monotonic() - started
     document_id = hashlib.sha256(f"crawl4ai\n{url}\n{fetched}".encode()).hexdigest()[:24]
-    store.ROOT.mkdir(parents=True, exist_ok=True)
+    documents = store.current()
     # Native results and the original archive are never used as fallback for one another.
     original = {"success": False, "sha256": None, "pages": [], "error": None}
     try:
@@ -116,11 +125,19 @@ def fetch_document(url: str) -> dict:
             raise ValueError("backendが原文HTMLを返しませんでした")
         original.update(success=True, sha256=hashlib.sha256(body).hexdigest(),
                         retrieved_at=datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(),
-                        path=str(store.ROOT / f"{document_id}.{suffix}"),
+                        path=str(documents.root / f"{document_id}.{suffix}"),
                         method="independent_http_pdf+pymupdf" if pdf else "backend_returned_html")
-        Path(original["path"]).write_bytes(body)
+        original_created = False
+        try:
+            with Path(original["path"]).open("xb") as out:
+                original_created = True
+                out.write(body)
+        except BaseException:
+            if original_created:
+                Path(original["path"]).unlink(missing_ok=True)
+            raise
     except (httpx.HTTPError, ValueError, RuntimeError, KeyError) as exc:
-        original["error"] = f"{type(exc).__name__}: {exc}"
+        original["error"] = error_code(exc, "source" if pdf else "backend")
     temporal = CATALOG.get(url, {}).get("temporal", {
         "stage": "unclassified", "subject_period": None, "meeting_dates": [], "basis": "unreviewed"})
     record = {"id": document_id, "backend": "crawl4ai", "url": url, "final_url": final_url,
@@ -128,10 +145,19 @@ def fetch_document(url: str) -> dict:
               "date_candidates": re.findall(r"(?:令和|平成)\d+年(?:度)?|\d{4}年\d+月\d+日", markdown)[:30],
               "native_success": success, "error": error, "markdown": markdown,
               "native_pages": pages, "links": links, "original": original,
-              "native_request": request, "native_response": raw,
               "native_seconds": native_seconds, "total_seconds": time.monotonic() - started}
-    store.save(record)
-    result = summarize(record)
+    record_path = documents.root / f"{document_id}.json"
+    had_record = record_path.exists()
+    try:
+        store.save(record)
+    except Exception:
+        # A failed ledger/cache write must not leave untracked source files.
+        if not had_record:
+            record_path.unlink(missing_ok=True)
+        if original["success"]:
+            Path(original["path"]).unlink(missing_ok=True)
+        raise
+    result = {**summarize(record), "content_change": record["content_change"]}
     # Page texts stay in the stored version; metadata returned by tools stays bounded.
     result["original"] = {k: v for k, v in original.items() if k != "pages"}
     return result
@@ -141,7 +167,11 @@ def fetch_document(url: str) -> dict:
 def discover_links(url: str, contains: str = "", limit: Limit = 50) -> dict:
     """1ページを実際に取得し、そこにあるリンクを返す。検索エンジンや全サイトmapではない。"""
     result = fetch_document(url)
-    record = store.load(result["id"])
+    try:
+        record = store.load(result["id"])
+    except store.MissingDocument as exc:
+        return {"method": "page_links", "search_engine_used": False,
+                "source": {**result, **exc.result}, "matched": 0, "links": []}
     found = {}
     for a in record["links"]:
         try:
@@ -156,7 +186,7 @@ def discover_links(url: str, contains: str = "", limit: Limit = 50) -> dict:
 
 @mcp.tool()
 def search_documents(query: str, limit: Annotated[int, Field(ge=1, le=20)] = 5) -> dict:
-    """取得済みnative本文を全文検索。空白区切りAND、NFKC・空白除去で日本語PDFに対応。"""
+    """このプロセスで一時保持中の本文をAND検索。サイト全体の索引検索ではない。"""
     hits = store.search("crawl4ai", query, limit)
     for hit in hits:
         hit["original"] = {k: v for k, v in hit["original"].items() if k != "pages"}
@@ -168,8 +198,11 @@ def read_source(document_id: str, page: Annotated[int, Field(ge=1)] | None = Non
                 offset: Annotated[int, Field(ge=0)] = 0,
                 length: Annotated[int, Field(ge=1, le=20000)] = 8000,
                 representation: Literal["native", "original_pdf"] = "native") -> dict:
-    """保存した版の本文を参照。ページはPDF物理ページ（1始まり）。original_pdfは補助抽出。"""
-    record = store.load(document_id)
+    """一時保持中の版を参照。期限切れは出典と再取得先を返す。ページはPDF物理ページ。"""
+    try:
+        record = store.load(document_id)
+    except store.MissingDocument as exc:
+        return exc.result
     if representation == "original_pdf":
         if not record["original"].get("page_count"):
             raise ValueError("PDF原本がありません")
@@ -193,17 +226,58 @@ def read_source(document_id: str, page: Annotated[int, Field(ge=1)] | None = Non
             "next_offset": offset + length if offset + length < len(text) else None}
 
 
-@mcp.tool()
-def render_pdf_page(document_id: str, page: Annotated[int, Field(ge=1)]) -> Image:
-    """保存済みPDF原本の1ページを画像で参照。OCR・外部モデルは呼ばない。"""
-    record = store.load(document_id)
+@mcp.tool(structured_output=False)
+def render_pdf_page(document_id: str, page: Annotated[int, Field(ge=1)]) -> Image | dict:
+    """一時保持中のPDFを画像表示。期限切れは出典と再取得先を返す。OCRなし。"""
+    try:
+        record = store.load(document_id)
+    except store.MissingDocument as exc:
+        return exc.result
     if not record["original"].get("page_count"):
         raise ValueError("PDF原本がありません")
-    with pymupdf.open(record["original"]["path"]) as doc:
+    with store.current().lock:
+        try:
+            store.load(document_id)
+        except store.MissingDocument as exc:
+            return exc.result
+        body = Path(record["original"]["path"]).read_bytes()
+    with pymupdf.open(stream=body, filetype="pdf") as doc:
         if page > len(doc):
             raise ValueError("ページが範囲外です")
         return Image(data=doc[page - 1].get_pixmap(dpi=120).tobytes("png"), format="png")
 
 
+def main():
+    closing = False
+    received_signal = None
+
+    def terminate(signum, frame):
+        nonlocal received_signal
+        received_signal = signum
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        if closing:
+            return
+        # The stdio reader can remain blocked in a non-cancellable worker thread.
+        # Clean our files synchronously, then exit without waiting for that thread.
+        if store._STORE is not None:
+            store._STORE.close()
+        os._exit(128 + signum)
+
+    signal.signal(signal.SIGTERM, terminate)
+    signal.signal(signal.SIGINT, terminate)
+    try:
+        store.current()
+        mcp.run(transport="stdio")
+    finally:
+        closing = True
+        try:
+            if store._STORE is not None:
+                store._STORE.close()
+        finally:
+            if received_signal is not None:
+                os._exit(128 + received_signal)
+
+
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    main()

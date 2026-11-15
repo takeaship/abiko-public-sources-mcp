@@ -46,7 +46,7 @@ async def evaluate(args):
     run = ROOT / args.output
     run.mkdir(parents=True, exist_ok=False)
     data = run / "data"
-    env = {**os.environ, "ABIKO_DATA": str(data)}
+    env = {**os.environ, "ABIKO_DATA": str(data), "ABIKO_HISTORY": str(run / "history.sqlite3")}
     corpus = json.loads((ROOT / "evaluation/corpus.json").read_text())
     questions = json.loads((ROOT / args.questions).read_text())
     (run / "corpus.json").write_text(json.dumps(corpus, ensure_ascii=False, indent=2))

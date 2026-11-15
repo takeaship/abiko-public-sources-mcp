@@ -5,6 +5,14 @@ import server
 import store
 
 
+@pytest.fixture(autouse=True)
+def documents(tmp_path, monkeypatch):
+    documents = store.DocumentStore(data=tmp_path / "data", history=tmp_path / "history.sqlite3")
+    monkeypatch.setattr(store, "_STORE", documents)
+    yield documents
+    documents.close()
+
+
 def record(id, text, timestamp="2026-11-14T03:00:00+09:00", success=True):
     return {"id": id, "backend": "crawl4ai", "url": "https://www.city.abiko.chiba.jp/test.pdf",
             "final_url": "https://www.city.abiko.chiba.jp/test.pdf", "title": "採決結果",
@@ -15,7 +23,6 @@ def record(id, text, timestamp="2026-11-14T03:00:00+09:00", success=True):
 
 
 def test_japanese_pdf_unicode_spacing_and_and_query(tmp_path, monkeypatch):
-    monkeypatch.setattr(store, "ROOT", tmp_path)
     store.save(record("a" * 24, "議 案 第 ８ 号 一般会計補正予算 全 ２３ ０"))
     assert store.search("crawl4ai", "議案第8号 一般会計")[0]["id"] == "a" * 24
     assert not store.search("crawl4ai", "議案第8号 可決していない")
@@ -23,7 +30,6 @@ def test_japanese_pdf_unicode_spacing_and_and_query(tmp_path, monkeypatch):
 
 
 def test_new_failure_does_not_silently_serve_old_success(tmp_path, monkeypatch):
-    monkeypatch.setattr(store, "ROOT", tmp_path)
     store.save(record("a" * 24, "議案第8号"))
     store.save(record("b" * 24, "", timestamp="2026-11-14T03:00:01+09:00", success=False))
     assert not store.search("crawl4ai", "議案第8号")
@@ -31,7 +37,6 @@ def test_new_failure_does_not_silently_serve_old_success(tmp_path, monkeypatch):
 
 
 def test_native_text_cannot_be_replaced_by_original_pdf_extraction(tmp_path, monkeypatch):
-    monkeypatch.setattr(store, "ROOT", tmp_path)
     store.save(record("a" * 24, ""))
     assert server.read_source("a" * 24)["text"] == ""
     with pytest.raises(ValueError, match="ページ境界"):
