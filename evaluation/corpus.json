@@ -1,0 +1,304 @@
+[
+  {
+    "id": "garbage",
+    "url": "https://www.city.abiko.chiba.jp/kurashi/gomi_shigen/wakekata/dasikata/wakekatadasikata.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/kurashi/gomi_shigen/wakekata/dasikata/wakekatadasikata.html"
+    }
+  },
+  {
+    "id": "child",
+    "url": "https://www.city.abiko.chiba.jp/kosodate/children/josei_kyufu/specialbenefits/h26jidou.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/kosodate/children/josei_kyufu/specialbenefits/h26jidou.html"
+    }
+  },
+  {
+    "id": "move",
+    "url": "https://www.city.abiko.chiba.jp/kurashi/jumin/jyumintouroku/tennyu.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/kurashi/jumin/jyumintouroku/tennyu.html"
+    }
+  },
+  {
+    "id": "disaster",
+    "url": "https://www.city.abiko.chiba.jp/anshin/bousai/hinan/hinanmeirei.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/anshin/bousai/hinan/hinanmeirei.html"
+    }
+  },
+  {
+    "id": "council",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/index.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "schedule",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "schedule",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "bills",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-6-gian.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "submitted_bill",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "questions",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-6ippanshitsumon.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "question_notice",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "votes",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/index.files/saiketukekkaR6.6.pdf",
+    "kind": "pdf",
+    "group": "core",
+    "temporal": {
+      "stage": "voting_result",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "policy",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shiseihoushin/r6_ippan/2024shiseihoushin.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "policy_statement",
+      "subject_period": "2024年度（令和6年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shiseihoushin/r6_ippan/2024shiseihoushin.html"
+    }
+  },
+  {
+    "id": "budget",
+    "url": "https://www.city.abiko.chiba.jp/shisei/zaisei/tousho_gaiyou/R6tousyo_gaiyou.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "approved_budget",
+      "subject_period": "2024年度（令和6年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/zaisei/tousho_gaiyou/R6tousyo_gaiyou.html"
+    }
+  },
+  {
+    "id": "plan_detail",
+    "url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/sougoukeikaku/r4_15dai4ji/20220401.html",
+    "kind": "html",
+    "group": "core",
+    "temporal": {
+      "stage": "published_plan",
+      "subject_period": "2022～2033年度（令和4～15年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/sougoukeikaku/r4_15dai4ji/20220401.html"
+    }
+  },
+  {
+    "id": "questions_pdf",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-6ippanshitsumon.files/shitsumon-youkouR6.6.pdf",
+    "kind": "pdf",
+    "group": "core",
+    "temporal": {
+      "stage": "question_notice",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "bill_pdf",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-6-gian.files/g8.pdf",
+    "kind": "pdf",
+    "group": "core",
+    "temporal": {
+      "stage": "submitted_bill",
+      "subject_period": "2024年第2回定例会（6月）",
+      "meeting_dates": [
+        "2024-06-03",
+        "2024-06-10",
+        "2024-06-11",
+        "2024-06-20"
+      ],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/teirei_rinji/r6dai2kai6gatsu/r6-2kaikinittei.html",
+      "meeting_dates_note": "会期日程の本会議日。各文書自体の作成日・全会議一覧ではない。"
+    }
+  },
+  {
+    "id": "budget_pdf",
+    "url": "https://www.city.abiko.chiba.jp/shisei/zaisei/tousho_gaiyou/R6tousyo_gaiyou.files/R6tousyoyosangaiyou.pdf",
+    "kind": "pdf",
+    "group": "core",
+    "temporal": {
+      "stage": "approved_budget",
+      "subject_period": "2024年度（令和6年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/zaisei/tousho_gaiyou/R6tousyo_gaiyou.files/R6tousyoyosangaiyou.pdf"
+    }
+  },
+  {
+    "id": "plan_pdf",
+    "url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/sougoukeikaku/r4_15dai4ji/20220401.files/kihonnkoousou.pdf",
+    "kind": "pdf",
+    "group": "core",
+    "temporal": {
+      "stage": "published_plan",
+      "subject_period": "2022～2033年度（令和4～15年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/sougoukeikaku/r4_15dai4ji/20220401.files/kihonnkoousou.pdf"
+    }
+  },
+  {
+    "id": "minutes_gateway",
+    "url": "https://www.city.abiko.chiba.jp/shisei/shigikai/system.html",
+    "kind": "html",
+    "group": "special",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/shigikai/system.html"
+    }
+  },
+  {
+    "id": "minutes_external",
+    "url": "https://ssp.kaigiroku.net/tenant/abiko/pg/index.html",
+    "kind": "html",
+    "group": "special",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://ssp.kaigiroku.net/tenant/abiko/pg/index.html"
+    }
+  },
+  {
+    "id": "minutes_app",
+    "url": "https://ssp.kaigiroku.net/tenant/abiko/SpTop.html",
+    "kind": "html",
+    "group": "special",
+    "temporal": {
+      "stage": "public_information",
+      "subject_period": null,
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://ssp.kaigiroku.net/tenant/abiko/SpTop.html"
+    }
+  },
+  {
+    "id": "old_scan",
+    "url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/gyoseikeiei/sankakuplan.files/20141023-121014.pdf",
+    "kind": "pdf",
+    "group": "special",
+    "temporal": {
+      "stage": "historical_plan",
+      "subject_period": "1999～2008年度（平成11～20年度）",
+      "meeting_dates": [],
+      "basis": "reviewed_catalog",
+      "basis_url": "https://www.city.abiko.chiba.jp/shisei/keikauhoushin/gyoseikeiei/sankakuplan.files/20141023-121014.pdf"
+    }
+  }
+]
